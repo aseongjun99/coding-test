@@ -1,4 +1,3 @@
-# https://codeup.kr/problem.php?id=6009
+# https://codeup.kr/problem.php?id=6008
 
-a = input()
-print(a)
+print('print("Hello\\nWorld")')
