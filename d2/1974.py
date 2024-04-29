@@ -2,7 +2,6 @@
 
 t = int(input()) + 1
 for tc in range(1, t):
-    # 인덱스 편하게 0번째는 0 집어넣기
     puzzle = []
     for i in range(9):
         puzzle.append(list(map(int, input().split())))
