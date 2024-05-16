@@ -12,7 +12,7 @@ for tc in range(1, t):
     # 오늘 1판 이상 졌는데 전체 승률 100인 경우
     if pd != 100 and pg == 100:
         possible = False
-    # 오늘 승률 100인데 전체 승률 0인 경우
+    # 오늘 1판 이상 이겼는데 전체 승률 0인 경우
     if pd != 0 and pg == 0:
         possible = False
 
