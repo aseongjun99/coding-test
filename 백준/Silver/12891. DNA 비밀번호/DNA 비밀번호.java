@@ -6,31 +6,6 @@ import java.util.StringTokenizer;
 
 public class Main {
 	
-//	static boolean checkACGT(String subString, int[] minCount) {
-//		int[] acgtCount = new int[4];
-//		for (int i=0;i<subString.length();i++) {
-//			if (subString.charAt(i) == 'A') {
-//				acgtCount[0]++;
-//			}
-//			if (subString.charAt(i) == 'C') {
-//				acgtCount[1]++;
-//			}
-//			if (subString.charAt(i) == 'G') {
-//				acgtCount[2]++;
-//			}
-//			if (subString.charAt(i) == 'T') {
-//				acgtCount[3]++;
-//			}	
-//		}
-//		
-//		for (int i=0;i<4;i++) {
-//			if (acgtCount[i] < minCount[i]) {
-//				return false;
-//			}
-//		}
-//		return true;
-//	}
-	
 	static boolean passwordAvailable(int[] acgtCount, int[] minCount) {
 		for (int i=0;i<4;i++) {
 			if (acgtCount[i] < minCount[i]) {
@@ -38,6 +13,30 @@ public class Main {
 			}
 		}
 		return true;
+	}
+	
+	static void subtractCount(char front, int[] acgtCount) {
+		if (front == 'A') {
+			acgtCount[0]--;
+		} else if (front == 'C') {
+			acgtCount[1]--;
+		} else if (front == 'G') {
+			acgtCount[2]--;
+		} else if (front == 'T') {
+			acgtCount[3]--;
+		}
+	}
+	
+	static void addCount(char back, int[] acgtCount) {
+		if (back == 'A') {
+			acgtCount[0]++;
+		} else if (back == 'C') {
+			acgtCount[1]++;
+		} else if (back == 'G') {
+			acgtCount[2]++;
+		} else if (back == 'T') {
+			acgtCount[3]++;
+		}
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -56,17 +55,11 @@ public class Main {
 		int[] acgtCount = new int[4];
 		
 		int answer = 0;
+		// 반복문을 순회하며 맨 앞 한 글자가 ACGT일때 count--, 맨 뒤 한 글자가 ACGT일 때 count++
+		// 매 반복마다 비밀번호로 만들 수 있는지 체크.
 		String subString = dna.substring(0, T);
 		for (int i=0;i<subString.length();i++) {
-			if (subString.charAt(i) == 'A') {
-				acgtCount[0]++;
-			} else if (subString.charAt(i) == 'C') {
-				acgtCount[1]++;
-			} else if (subString.charAt(i) == 'G') {
-				acgtCount[2]++;
-			} else if (subString.charAt(i) == 'T') {
-				acgtCount[3]++;
-			}
+			addCount(subString.charAt(i), acgtCount);
 		}
 		
 		if (passwordAvailable(acgtCount, minCount)) {
@@ -74,36 +67,13 @@ public class Main {
 		}
 		
 		for (int i=1;i<S-T+1;i++) {
-			if (dna.charAt(i-1) == 'A') {
-				acgtCount[0]--;
-			} else if (dna.charAt(i-1) == 'C') {
-				acgtCount[1]--;
-			} else if (dna.charAt(i-1) == 'G') {
-				acgtCount[2]--;
-			} else if (dna.charAt(i-1) == 'T') {
-				acgtCount[3]--;
-			}
-			
-			if (dna.charAt(i+T-1) == 'A') {
-				acgtCount[0]++;
-			} else if (dna.charAt(i+T-1) == 'C') {
-				acgtCount[1]++;
-			} else if (dna.charAt(i+T-1) == 'G') {
-				acgtCount[2]++;
-			} else if (dna.charAt(i+T-1) == 'T') {
-				acgtCount[3]++;
-			}
+			subtractCount(dna.charAt(i-1), acgtCount);
+			addCount(dna.charAt(i+T-1), acgtCount);
 			
 			if (passwordAvailable(acgtCount, minCount)) {
 				answer++;
 			}
 		}
-//		for (int i=0;i<S-T+1;i++) {
-//			String subString = dna.substring(i, i+T);
-//			if (checkACGT(subString, minCount)) {
-//				answer++;
-//			}
-//		}
 		System.out.println(answer);
 		
 	}
