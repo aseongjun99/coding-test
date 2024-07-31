@@ -11,6 +11,15 @@ import java.util.StringTokenizer;
 
 public class Main {
 	
+	static boolean obstacleCheck(int[] obstaclePos, int pos) {
+		for (int i=0;i<obstaclePos.length;i++) {
+			if (obstaclePos[i] == pos) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -43,15 +52,12 @@ public class Main {
 				K++;
 				visit = new int[N+1];
 			} else {
-				for (int i=0;i<M;i++) {
-					if (obstaclePos[i] == pos) {
-						pos = 1;
-						K++;
-						visit = new int[N+1];
-						break;
-					}
+				if (!obstacleCheck(obstaclePos, pos)) {
+					pos = 1;
+					K++;
+					visit = new int[N+1];
 				}
-				visit[pos] =1;
+				visit[pos] = 1;
 			}
 		}
 	}
