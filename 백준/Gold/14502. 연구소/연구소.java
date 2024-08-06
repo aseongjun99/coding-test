@@ -39,59 +39,11 @@ public class Main {
 			int x = xPos.get(comb.get(i));
 			int y = yPos.get(comb.get(i));
 			res[y][x] = 1;
-		}
-//		for (int i=0;i<res.length;i++) {
-//			for (int j=0;j<res[i].length;j++) {
-//				System.out.print(res[i][j]);
-//			}
-//			System.out.println();
-//		}
-//		System.out.println();
-		
+		}		
 		return res;
-		
-//		int max = 0;
-//		for (int i=0;i<comb.size();i++) {
-//			int[][] temp = new int[arr.length][arr[0].length];
-//			for (int j=0;j<temp.length;j++) {
-//				temp[j] = arr[j].clone();
-//			}
-//			
-//			for (int j=0;j<comb.get(i).size();j++) {
-//				int x = xPos.get(comb.get(i).get(j));
-//				int y = yPos.get(comb.get(i).get(j));
-//				
-//				temp[y][x] = 1;
-//			}
-//			
-//			
-//			for (int j=0;j<temp.length;j++) {
-//				for (int k=0;k<temp[j].length;k++) {
-//					if (temp[j][k] == 2) {
-//						max = Math.max(max, virus(temp, j, k));
-//					}
-//				}
-//			}
-//		}
-//		return max;
 	}
 	
 	static void virus(int[][] arr, int x, int y) {
-		
-//		for (int i=0;i<arr.length;i++) {
-//			for (int j=0;j<arr[i].length;j++) {
-//				if (arr[i][j] == 2) {
-//					for (int k=0;k<4;k++) {
-//						int nx = dx[k] + j;
-//						int ny = dy[k] + i;
-//						if (nx < 0 || nx >= arr[i].length || ny < 0 || ny >= arr.length || arr[ny][nx] == 1) {
-//							continue;
-//						}
-//						arr[ny][nx] = 2;
-//					}
-//				}
-//			}
-//		}
 		for (int i=0;i<4;i++) {
 			int nx = dx[i] + x;
 			int ny = dy[i] + y;
@@ -153,20 +105,11 @@ public class Main {
 		// 조합을 토대로 벽 3개 생성
 		for (int i=0;i<combinationResult.size();i++) {
 			int[][] temp = buildWall(combinationResult.get(i), arr, blankXPos, blankYPos);
-			
-//			for (int j=0;j<temp.length;j++) {
-//				for (int k=0;k<temp[j].length;k++) {
-//					System.out.print(temp[j][k]);
-//				}
-//				System.out.println();
-//			}
-			
 		
 			for (int j=0;j<temp.length;j++) {
 				for (int k=0;k<temp[j].length;k++) {
 					if (temp[j][k] == 2) {
 						virus(temp,k,j);
-//						max = Math.max(max, virus(temp,k, j));
 					}
 				}
 			}
