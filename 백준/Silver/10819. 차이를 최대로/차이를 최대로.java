@@ -12,21 +12,21 @@ import java.util.StringTokenizer;
 
 public class Main {
 	
-	static int combination(List<Integer> input, List<Integer> comb) {
+	static int permutation(List<Integer> input, List<Integer> perm) {
 		int max = 0;
 		if (input.size() == 0) {
-			for (int i=0;i<comb.size()-1;i++) {
-				max += Math.abs(comb.get(i) - comb.get(i+1));
+			for (int i=0;i<perm.size()-1;i++) {
+				max += Math.abs(perm.get(i) - perm.get(i+1));
 			}
 		} else {
 			for (int i=0;i<input.size();i++) {
-				List<Integer> nextComb = new ArrayList<>(comb);
-				nextComb.add(input.get(i));
+				List<Integer> nextPerm = new ArrayList<>(perm);
+				nextPerm.add(input.get(i));
 				
 				List<Integer> nextInput = new ArrayList<>(input);
 				nextInput.remove(input.indexOf(input.get(i)));
 				
-				max = Math.max(combination(nextInput, nextComb), max);
+				max = Math.max(permutation(nextInput, nextPerm), max);
 			}	
 		}
 		return max;
@@ -41,7 +41,7 @@ public class Main {
 			A.add(Integer.parseInt(st.nextToken()));
 		}
 		
-		int answer = combination(A, new ArrayList<>());
+		int answer = permutation(A, new ArrayList<>());
 		System.out.println(answer);
 	}
 }
