@@ -39,6 +39,9 @@ public static int[] solution(int[][] dice) {
 
 		// 추출한 주사위 순회하며 모든 합의 경우의 수 저장
 		// 0 번째 vs n-1 번째, 1 번째 vs n-2 번째, ... 로 비교하면 된다.
+        // A가 가져간 주사위 조합에서 최대 승이 안나오면 반드시 최대 패가 나오게 되어있음.
+        // 이를 바탕으로 최대 승과 최대 패를 비교해서 최대 승이 많다면 해당 주사위 조합이 정답이고,
+        // 최대 패가 많다면 해당 주사위 조합의 반대되는 주사위 조합이 정답.
 		int maxWin = 0;
 		int maxWinDicesIndex = -1;
 		int maxLose = 0;
@@ -46,33 +49,33 @@ public static int[] solution(int[][] dice) {
 		for (int i = 0; i < diceCombList.size() / 2; i++) {
 			List<Integer> aDices = diceCombList.get(i);
 			List<Integer> bDices = diceCombList.get(diceCombList.size() - i - 1);
-			List<Integer> diceSum1 = new ArrayList<>();
-			List<Integer> diceSum2 = new ArrayList<>();
+			List<Integer> aDicesSum = new ArrayList<>();
+			List<Integer> bDicesSum = new ArrayList<>();
 
 			// 최적화 필요
 			for (int j = 0; j < aDices.size(); j++) {
 				if (j == 0) {
 					for (int k = 0; k < dice[aDices.get(j)].length; k++) {
-						diceSum1.add(dice[aDices.get(j)][k]);
-						diceSum2.add(dice[bDices.get(j)][k]);
+						aDicesSum.add(dice[aDices.get(j)][k]);
+						bDicesSum.add(dice[bDices.get(j)][k]);
 					}
 				} else {
-					diceSum1 = add(diceSum1, aDices.get(j), dice);
-					diceSum2 = add(diceSum2, bDices.get(j), dice);
+					aDicesSum = add(aDicesSum, aDices.get(j), dice);
+					bDicesSum = add(bDicesSum, bDices.get(j), dice);
 				}
 			}
 
-			Collections.sort(diceSum1);
-			Collections.sort(diceSum2);
+			Collections.sort(aDicesSum);
+			Collections.sort(bDicesSum);
 
 			int win = 0;
 			int lose = 0;
-			for (int j = 0; j < diceSum1.size(); j++) {
+			for (int j = 0; j < aDicesSum.size(); j++) {
 				int left = 0;
-				int right = diceSum1.size() - 1;
+				int right = aDicesSum.size() - 1;
 				while (left <= right) {
 					int mid = (left + right) / 2;
-					if (diceSum1.get(j) > diceSum2.get(mid)) {
+					if (aDicesSum.get(j) > bDicesSum.get(mid)) {
 						left = mid + 1;
 					} else {
 						right = mid - 1;
@@ -81,16 +84,16 @@ public static int[] solution(int[][] dice) {
 				win += left;
 				
 				left = 0;
-				right = diceSum1.size() - 1;
+				right = aDicesSum.size() - 1;
 				while (left <= right) {
 					int mid = (left + right) / 2;
-					if (diceSum1.get(j) >= diceSum2.get(mid)) {
+					if (aDicesSum.get(j) >= bDicesSum.get(mid)) {
 						left = mid + 1;
 					} else {
 						right = mid - 1;
 					}
 				}
-				lose += diceSum2.size() - left;
+				lose += bDicesSum.size() - left;
 			}
 
 //            // 최적화 필요
