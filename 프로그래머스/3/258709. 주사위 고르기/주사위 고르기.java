@@ -70,6 +70,7 @@ public static int[] solution(int[][] dice) {
 
 			int win = 0;
 			int lose = 0;
+            // 각 숫자마다 이분탐색을 통해 자신보다 큰 수/작은 수가 몇 개인지 확인
 			for (int j = 0; j < aDicesSum.size(); j++) {
 				int left = 0;
 				int right = aDicesSum.size() - 1;
@@ -96,7 +97,7 @@ public static int[] solution(int[][] dice) {
 				lose += bDicesSum.size() - left;
 			}
 
-//            // 최적화 필요
+//            // 최적화 필요 (시간 초과)
 //            for (int j=0;j<diceSum1.size();j++) {
 //            	if ((win + (diceSum1.size()-j) * diceSum2.size() < maxWin) && (lose + (diceSum1.size()-j)*diceSum2.size() < maxLose)) {
 //            		break;
