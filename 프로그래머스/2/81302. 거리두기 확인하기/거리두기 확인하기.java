@@ -7,7 +7,7 @@ class Solution {
     static int[] dy = {-1, 1, 0, 0};
     static boolean isDistanceOK;
     
-    static void checkDistance(int x, int y, String[] place, boolean[][] visitedApplicant) {
+    static boolean checkDistance(int x, int y, String[] place) {
         Queue<int[]> q = new LinkedList<>();
         q.add(new int[]{x, y, 0});
         boolean[][] visit = new boolean[place.length][place[0].length()];
@@ -21,39 +21,37 @@ class Solution {
                 if (nx < 0 || nx >= place[0].length() || ny < 0 || ny >= place.length || visit[ny][nx] || place[ny].charAt(nx) == 'X') {
                     continue;
                 }
-                if (visitedApplicant[ny][nx]) {
-                    continue;
-                }
                 if (place[ny].charAt(nx) == 'P') {
+                    // 맨해튼 거리 2이하이면 종료
                     if (now[2]+1 <= 2) {
-                        isDistanceOK = false;
-                        return;
+                        return false;
                     }
                 }
                 visit[ny][nx] = true;
                 q.add(new int[]{nx, ny, now[2]+1});
             }
         }
+        return true;
     }
     
     public int[] solution(String[][] places) {
         int[] answer = new int[places.length];
-        // 응시자가 있는 위치에서 bfs를 돌며 다른 응시자와의 거리를 파악
-        // 한 명이라도 바로 거리두기를 지키지 않았으면 바로 끝내고 0
+        // places를 순회하며 응시자의 위치에서 다른 응시자 위치 탐색 (BFS)
+        // 만약 맨해튼 거리가 2 이하라면 해당 대기실은 탐색 종료(0).
+        // 모든 응시자의 맨해튼 거리가 2 이하인 경우가 없다면 1
         for (int i=0;i<places.length;i++) {
-            boolean[][] visit = new boolean[places.length][places[0].length];
             for (int j=0;j<places[i].length;j++) {
+                isDistanceOK = true;
                 for (int k=0;k<places[i][j].length();k++) {
-                    isDistanceOK = true;
                     if (places[i][j].charAt(k) == 'P') {
-                        checkDistance(k, j, places[i], visit);
-                        if (!isDistanceOK) {
-                            answer[i] = 0;
+                        // 한 명이라도 거리두기 안지키면 종료
+                        if (!checkDistance(k, j, places[i])) {
+                            isDistanceOK = false;
                             break;
                         }
-                        visit[j][k] = true;
                     }
                 }
+                // 거리두기 안지키면 종료
                 if (!isDistanceOK) {
                     break;
                 }
