@@ -41,7 +41,7 @@ class Solution {
 			q2Sum += queue2[i];
 		}
         answer = -1;
-        for (int i=0;i<queue1.length * 4;i++) {
+        for (int i=0;i<queue1.length * 3;i++) {
             if (q1Sum == q2Sum) {
                 answer = i;
                 break;
