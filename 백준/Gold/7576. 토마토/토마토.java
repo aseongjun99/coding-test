@@ -2,76 +2,68 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringTokenizer st;
+    static StringBuilder sb = new StringBuilder();
 
-    static int N, M;
+    static int M, N;
     static int[][] box;
     static int[] dx = {0, 0, -1, 1};
     static int[] dy = {-1, 1, 0, 0};
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+    static int unriped = 0;
+    static Queue<int[]> q = new LinkedList<>();
+
+    static void input() throws IOException {
+        st = new StringTokenizer(br.readLine());
         M = Integer.parseInt(st.nextToken());
         N = Integer.parseInt(st.nextToken());
-        box = new int[N][M];
-        
-        Queue<int[]> q = new LinkedList<>();
-        int ripe = 0;
-        int empty = 0;
 
+        box = new int[N][M];
         for (int i=0;i<N;i++) {
             st = new StringTokenizer(br.readLine());
             for (int j=0;j<M;j++) {
                 box[i][j] = Integer.parseInt(st.nextToken());
-                if (box[i][j] == 1) {
-                    q.add(new int[] {i, j, 1});
-                    ripe++;
+                if (box[i][j] == 0) {
+                    unriped++;
                 }
-                else if (box[i][j] == -1) {
-                    empty++;
+                else if (box[i][j] == 1) {
+                    q.add(new int[]{i, j, 0});
                 }
             }
         }
+    }
 
-        // 저장될 때 부터 다 익으면 0
-        if (ripe == N*M) {
-            System.out.println(0);
+    static void ripe() {
+        int day = 0;
+        while (!q.isEmpty()) {
+            int[] now = q.poll();
+            day = now[2];
+
+            for (int i=0;i<4;i++) {
+                int ny = now[0] + dy[i];
+                int nx = now[1] + dx[i];
+
+                if (ny < 0 || ny >= N || nx < 0 || nx >= M || box[ny][nx] != 0) {
+                    continue;
+                }
+
+                q.add(new int[]{ny, nx, now[2]+1});
+                unriped--;
+                box[ny][nx] = 1;
+            }
+        }
+
+        if (unriped == 0) {
+            System.out.println(day);
         }
         else {
-            int day = 0;
-            while (!q.isEmpty()) {
-                int[] now = q.poll();
-                int y = now[0]; int x = now[1];
-                int nextDay = now[2];
-
-                for (int i=0;i<4;i++) {
-                    int nx = x + dx[i];
-                    int ny = y + dy[i];
-                    
-                    if (nx < 0 || nx >= M || ny < 0 || ny >= N) {
-                        continue;
-                    }
-                    if (box[ny][nx] == -1 || box[ny][nx] == 1) {
-                        continue;
-                    }
-
-                    box[ny][nx] = 1;
-                    ripe++;
-                    day = nextDay;
-
-                    q.add(new int[] {ny, nx, nextDay+1});
-                }
-            }
-
-            if (ripe != N*M - empty) {
-                System.out.println(-1);
-            }
-            else {
-                System.out.println(day);
-            }
+            System.out.println(-1);
         }
+    }
 
-
-
+    public static void main(String[] args) throws Exception {
+        input();
+        ripe();
     }
 }
