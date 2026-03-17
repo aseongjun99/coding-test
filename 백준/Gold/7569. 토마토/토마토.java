@@ -2,79 +2,93 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringTokenizer st;
+    static StringBuilder sb = new StringBuilder();
 
     static int M, N, H;
     static int[][][] box;
-    static int[] dx = {0, 0, 0, 0, -1, 1};
-    static int[] dy = {0, 0, -1, 1, 0, 0};
-    static int[] dz = {-1, 1, 0, 0, 0, 0};
+    static int unripedCount = 0;
+    static Queue<int[]> pos = new LinkedList();
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+    static int[] dy = {-1, 1, 0, 0, 0, 0};
+    static int[] dx = {0, 0, -1, 1, 0, 0};
+    static int[] dh = {0, 0, 0, 0, -1, 1};
+
+    static void input() throws IOException {
+        st = new StringTokenizer(br.readLine());
         M = Integer.parseInt(st.nextToken());
         N = Integer.parseInt(st.nextToken());
         H = Integer.parseInt(st.nextToken());
-        box = new int[H][N][M];
 
-        int ripe = 0;
-        int unripe = 0;
-        int empty = 0;
-        Queue<int[]> q = new LinkedList<>();
-        for (int i=0;i<H;i++) {
-            for (int j=0;j<N;j++) {
+        box = new int[H][N][M];
+        for (int h=0;h<H;h++ ){
+            for (int i=0;i<N;i++) {
                 st = new StringTokenizer(br.readLine());
-                for (int k=0;k<M;k++) {
-                    box[i][j][k] = Integer.parseInt(st.nextToken());
-                    if (box[i][j][k] == 1) {
-                        ripe++;
-                        // h, n, m, 일
-                        q.add(new int[] {i, j, k, 1});
+                for (int j=0;j<M;j++) {
+                    box[h][i][j] = Integer.parseInt(st.nextToken());
+                    if (box[h][i][j] == 0) {
+                        unripedCount++;
                     }
-                    else if(box[i][j][k] == 0) {
-                        unripe++;
-                    }
-                    else if (box[i][j][k] == -1) {
-                        empty++;
+                    else if (box[h][i][j] == 1) {
+                        pos.add(new int[]{h, i, j, 0});
                     }
                 }
             }
         }
+    }
 
-        // 저장될 때부터 모든 토마토 익음
-        if (unripe == 0) {
-            System.out.println(0);
+    static void ripe() {
+        int day = 0;
+        while (!pos.isEmpty()) {
+            int[] now = pos.poll();
+
+            for (int i=0;i<6;i++) {
+                int nh = now[0] +dh[i];
+                int ny = now[1] +dy[i];
+                int nx = now[2] + dx[i];
+
+                if (nh < 0 || nh >= H || ny < 0 || ny >= N || nx < 0 || nx >= M) {
+                    continue;
+                }
+                else if (box[nh][ny][nx] == -1 || box[nh][ny][nx] == 1) {
+                    continue;
+                }
+                
+                box[nh][ny][nx] = 1;
+                unripedCount--;
+                if (unripedCount == 0) {
+                    day = now[3]+1;
+                    break;
+                }
+                pos.add(new int[]{nh, ny, nx, now[3]+1});
+            }
+            // System.out.println("now : " + now[3]);
+            // print();
+        }
+
+        if (unripedCount != 0) {
+            System.out.println(-1);
         }
         else {
-            int day = 0;
-            while (!q.isEmpty()) {
-                int[] now = q.poll();
-                int z = now[0]; int y = now[1]; int x = now[2]; int d = now[3];
-
-                for (int i=0;i<6;i++) {
-                    int nz = z + dz[i]; int ny = y + dy[i]; int nx = x + dx[i];
-                    if (nz < 0 || nz >= H || ny < 0 || ny >= N || nx < 0 || nx >= M) {
-                        continue;
-                    }
-                    if (box[nz][ny][nx] == -1 || box[nz][ny][nx] == 1) {
-                        continue;
-                    }
-                    box[nz][ny][nx] = 1;
-                    ripe++;
-                    unripe--;
-                    day = d;
-                    q.add(new int[] {nz, ny, nx, d+1});
-                }
-            }
-
-            if (unripe != 0) {
-                System.out.println(-1);
-            }
-            else {
-                System.out.println(day);
-            }
-
+            System.out.println(day);
         }
+    }
 
+    static void print() {
+        for (int h=0;h<H;h++) {
+            for (int n=0;n<N;n++) {
+                for (int m=0;m<M;m++) {
+                    System.out.print(box[h][n][m] + " ");
+                }
+                System.out.println();
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        input();
+        ripe();
     }
 }
