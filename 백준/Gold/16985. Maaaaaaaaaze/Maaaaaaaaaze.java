@@ -51,18 +51,16 @@ public class Main {
     static void rotateDfs(int idx) {
         // 종료
         if (idx == 5) {
+            bfs();
             return;
         }
 
-        // 현재 상태로 경로 탐색
-        bfs();
         // 다음 뎁스
         rotateDfs(idx+1);
 
         // 현재 판 회전하고 탐색 (총 3번 회전 가능)
         for (int i=0;i<3;i++) {
             rotate(idx);
-            bfs();
             rotateDfs(idx+1);
         }
     }
